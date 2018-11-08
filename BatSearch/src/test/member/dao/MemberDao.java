@@ -24,6 +24,47 @@ public class MemberDao {
 		}
 		return dao;
 	}
+	//인자로 전달되는 아이디를 사용가능한지 여부를 리턴해주는 메소드
+	public boolean canUseId(String inputId) {
+		//사용 가능한지 여부를 담을 지역변수 만들고 초기값 true 부여
+		boolean canUse=true;
+		//필요한 객체를 담을 지역변수 미리 만들기 
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			// Connection pool 에서 Connection 객체 하나 가져오기 
+			conn = new DbcpBean().getConn();
+			// 실행할 sql 문 준비 
+			String sql = "SELECT id FROM member1"
+					+ " WHERE id=?";
+			//PreparedStatement 객체의 참조값 얻어오기 
+			pstmt = conn.prepareStatement(sql);
+			// ? 에 필요한 값 바인딩
+			pstmt.setString(1, inputId);
+			// sql(쿼리) 문을 수행하고 ResultSet 객체를 리턴 받는다.
+			rs = pstmt.executeQuery();
+			//반복문 돌면서 
+			if(rs.next()) {//커서를 한칸씩 내리면서
+				//가입 불가한 아이디 이다.
+				canUse=false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+			}
+		}
+		//지역 변수에 있는 값을 리턴해준다.
+		return canUse;
+	}
 	//구글 로그인 저장
 	public boolean goologin(String gooid, String gooname, String gooemail) {
 		int check=0;
