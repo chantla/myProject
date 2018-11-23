@@ -25,7 +25,7 @@ public class MemberDao {
 		return dao;
 	}
 	//인자로 전달되는 아이디를 사용가능한지 여부를 리턴해주는 메소드
-	public boolean canUseId(String inputId) {
+	public boolean canUseId(String email) {
 		//사용 가능한지 여부를 담을 지역변수 만들고 초기값 true 부여
 		boolean canUse=true;
 		//필요한 객체를 담을 지역변수 미리 만들기 
@@ -36,12 +36,12 @@ public class MemberDao {
 			// Connection pool 에서 Connection 객체 하나 가져오기 
 			conn = new DbcpBean().getConn();
 			// 실행할 sql 문 준비 
-			String sql = "SELECT id FROM member1"
-					+ " WHERE id=?";
+			String sql = "SELECT email FROM member1"
+					+ " WHERE email=?";
 			//PreparedStatement 객체의 참조값 얻어오기 
 			pstmt = conn.prepareStatement(sql);
 			// ? 에 필요한 값 바인딩
-			pstmt.setString(1, inputId);
+			pstmt.setString(1, email);
 			// sql(쿼리) 문을 수행하고 ResultSet 객체를 리턴 받는다.
 			rs = pstmt.executeQuery();
 			//반복문 돌면서 
